@@ -53,15 +53,19 @@ y controlar automáticamente los aciertos, con notificación cuando se publican 
 - [x] Preferencias de notificaciones en Ajustes (Quini 6 activado por defecto; cada quiniela opcional)
 - [ ] Redoblona (evaluar si entra en esta etapa o más adelante)
 
-### Etapa 3 — Publicación
-- [ ] Logo e ícono
+### Etapa 3 — Identidad visual
+- [ ] Elegir dirección de logo y colores (propuestas: A bolilla revisada, B boleta marcada, C bolillero)
+- [ ] Ícono de la app (adaptativo) e ícono de notificación con el logo elegido
+- [ ] Aplicar la paleta nueva al tema de la app (modo claro y oscuro)
+
+### Etapa 4 — Publicación
 - [ ] Política de privacidad (página web pública)
 - [ ] Opción "Borrar mi cuenta" dentro de la app (requisito de Google)
 - [ ] Formulario de Seguridad de los datos en Play Console
 - [ ] Prueba cerrada: **12 testers durante 14 días** (requisito para cuentas personales nuevas)
 - [ ] Publicación en producción
 
-### Etapa 4 — Extras (futuro)
+### Etapa 5 — Extras (futuro)
 - [ ] Scrapers automáticos de resultados (con confirmación del admin)
 - [ ] Escanear la boleta con la cámara (ML Kit)
 - [ ] Botón "Repetir en el próximo sorteo" en cada jugada
