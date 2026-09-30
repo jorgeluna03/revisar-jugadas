@@ -1,0 +1,55 @@
+rules_version = '2';
+
+// Reglas de seguridad de Cloud Firestore para Revisar Jugadas.
+// Cada usuario solo puede ver y modificar sus propias jugadas.
+// Los resultados de los sorteos los puede leer cualquier usuario logueado,
+// pero solo los escriben los administradores (listados en la colección "admins").
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function logueado() {
+      return request.auth != null;
+    }
+
+    function esDuenio(uid) {
+      return logueado() && request.auth.uid == uid;
+    }
+
+    function esAdmin() {
+      return logueado() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function numeroQuini6(n) {
+      return n is int && n >= 0 && n <= 45;
+    }
+
+    function jugadaQuini6Valida(d) {
+      return d.keys().hasOnly(['juego', 'fechaSorteo', 'numeros', 'revancha', 'siempreSale', 'actualizada'])
+        && d.juego == 'QUINI6'
+        && d.fechaSorteo is string && d.fechaSorteo.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && d.numeros is list && d.numeros.size() == 6
+        && d.numeros.toSet().size() == 6
+        && numeroQuini6(d.numeros[0]) && numeroQuini6(d.numeros[1]) && numeroQuini6(d.numeros[2])
+        && numeroQuini6(d.numeros[3]) && numeroQuini6(d.numeros[4]) && numeroQuini6(d.numeros[5])
+        && d.revancha is bool
+        && d.siempreSale is bool;
+    }
+
+    match /usuarios/{uid}/jugadas/{jugadaId} {
+      allow read, delete: if esDuenio(uid);
+      allow create, update: if esDuenio(uid) && jugadaQuini6Valida(request.resource.data);
+    }
+
+    match /sorteos/{sorteoId} {
+      allow read: if logueado();
+      allow write: if esAdmin();
+    }
+
+    // La lista de administradores solo se modifica desde la consola de Firebase
+    match /admins/{uid} {
+      allow read: if esDuenio(uid);
+      allow write: if false;
+    }
+  }
+}

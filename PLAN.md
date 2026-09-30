@@ -37,12 +37,12 @@ y controlar automáticamente los aciertos, con notificación cuando se publican 
 ### Etapa 1 — Base + Quini 6
 - [x] Estructura de la app: navegación, tema, pantallas vacías
 - [x] Login con Google + modo invitado (con vinculación invitado → Google)
-- [ ] Cargar / editar / borrar jugadas de Quini 6
+- [x] Cargar / editar / borrar jugadas de Quini 6
 - [ ] Ver resultados del último sorteo y anteriores
 - [ ] Sección admin: cargar resultados de Quini 6 (todas las modalidades) y publicar
 - [ ] Cloud Function: al publicar, controlar las jugadas del sorteo y guardar aciertos
 - [ ] Notificaciones: aviso general + aviso personal con el resultado de tus jugadas
-- [ ] Reglas de seguridad de Firestore (cada usuario solo ve sus jugadas; solo admin escribe sorteos)
+- [x] Reglas de seguridad de Firestore (cada usuario solo ve sus jugadas; solo admin escribe sorteos) — en `firestore.rules`, publicadas a mano desde la consola
 
 ### Etapa 2 — Quiniela
 - [ ] Cargar apuestas de Quiniela (1 a 4 cifras, posición, jurisdicción, turno)
@@ -95,13 +95,25 @@ Ids legibles para sorteos: `QUINI6-3413`, `QUINIELA-NACIONAL-2026-09-29-NOCTURNA
 
 ---
 
-## Reglas de juego (a verificar antes de implementar)
+## Reglas de juego
 
-**Quini 6** — números del 00 al 45, sorteos miércoles y domingo.
-- Tradicional y La Segunda: premian 6, 5 y 4 aciertos.
-- Revancha: premia 6 aciertos (opcional en la boleta).
-- Siempre Sale: premia a quienes tengan la mayor cantidad de aciertos (opcional).
-- Pozo Extra: 6 aciertos entre los números de Tradicional + La Segunda + Revancha.
+**Quini 6** ✅ confirmado con "Características del juego Quini 6" (Lotería de Santa Fe).
+- La apuesta son **6 números distintos entre 00 y 45**. **En todas las modalidades se juega con los mismos 6 números.**
+- Sorteos: miércoles y domingo. Los premios caducan a los 15 días corridos desde el día posterior al sorteo.
+- Tradicional Primer Sorteo: premia 6, 5 y 4 aciertos.
+- Tradicional La Segunda: premia 6, 5 y 4 aciertos (incluida en la apuesta Tradicional).
+- Revancha: premia 6 aciertos. Adicional opcional; requiere jugar Tradicional.
+- Siempre Sale: busca 6 aciertos, si no hay ganador 5, luego 4... hasta que haya ganador.
+  Adicional opcional; requiere jugar Tradicional. → Al cargar el sorteo hay que guardar
+  **con cuántos aciertos salió** (ej. el sorteo 3412 pagó a 5 aciertos).
+- Pozo Extra: 6 aciertos sobre los 18 números de Tradicional + La Segunda + Revancha
+  (los repetidos cuentan una sola vez). Según las preguntas frecuentes, **excluye** a quienes
+  ya acertaron 6 en alguna modalidad.
+  - **Participan todas las boletas**, sin apuesta adicional (aunque no jueguen Revancha).
+  - Verificado con el sorteo 3412: el Pozo Extra publicado incluía 25, 29, 34, 42 y 43,
+    que solo salieron en la Revancha → la Revancha sí cuenta.
+  - El panel de admin calcula los números del Pozo Extra solo, a partir de los otros tres sorteos.
+- Precios de referencia (2026): Tradicional $2000, Revancha +$1000, Siempre Sale +$1000.
 
 **Quiniela** — 20 números de 4 cifras por sorteo, lunes a sábado.
 - Turnos: La Previa, La Primera, Matutina, Vespertina, Nocturna (confirmar cuáles tiene cada jurisdicción).
