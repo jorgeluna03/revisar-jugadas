@@ -29,14 +29,14 @@ y controlar automáticamente los aciertos, con notificación cuando se publican 
 - [x] Instalar Android Studio (incluye SDK y emulador)
 - [ ] Actualizar Node.js a LTS (22.x) — hoy está la 12
 - [ ] Instalar Firebase CLI (`npm install -g firebase-tools`)
-- [ ] Crear proyecto en Firebase Console ("revisar-jugadas")
-- [ ] Registrar la app Android en Firebase y descargar `google-services.json`
-- [x] Crear el proyecto Android base (compila OK) — falta abrirlo en Android Studio
+- [x] Crear proyecto en Firebase Console ("revisar-jugadas")
+- [x] Registrar la app Android en Firebase y descargar `google-services.json` (no se sube al repo)
+- [x] Crear el proyecto Android base y correrlo en el emulador
 - [ ] Cuenta de Google Play Console (USD 25) — puede esperar hasta la Etapa 3
 
 ### Etapa 1 — Base + Quini 6
 - [x] Estructura de la app: navegación, tema, pantallas vacías
-- [ ] Login con Google + modo invitado
+- [x] Login con Google + modo invitado (con vinculación invitado → Google)
 - [ ] Cargar / editar / borrar jugadas de Quini 6
 - [ ] Ver resultados del último sorteo y anteriores
 - [ ] Sección admin: cargar resultados de Quini 6 (todas las modalidades) y publicar

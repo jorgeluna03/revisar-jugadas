@@ -19,6 +19,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.jluna.revisarjugadas.data.auth.Usuario
+import com.jluna.revisarjugadas.ui.login.SesionViewModel
 import com.jluna.revisarjugadas.ui.screens.AjustesScreen
 import com.jluna.revisarjugadas.ui.screens.MisJugadasScreen
 import com.jluna.revisarjugadas.ui.screens.ResultadosScreen
@@ -31,7 +33,7 @@ enum class Pestania(val ruta: String, val titulo: String, val icono: ImageVector
 }
 
 @Composable
-fun AppNavegacion() {
+fun AppNavegacion(usuario: Usuario, sesion: SesionViewModel) {
     val navController = rememberNavController()
     val entradaActual by navController.currentBackStackEntryAsState()
     val rutaActual = entradaActual?.destination?.route
@@ -63,7 +65,7 @@ fun AppNavegacion() {
         ) {
             composable(Pestania.JUGADAS.ruta) { MisJugadasScreen() }
             composable(Pestania.RESULTADOS.ruta) { ResultadosScreen() }
-            composable(Pestania.AJUSTES.ruta) { AjustesScreen() }
+            composable(Pestania.AJUSTES.ruta) { AjustesScreen(usuario, sesion) }
         }
     }
 }
