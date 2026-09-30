@@ -36,9 +36,26 @@ service cloud.firestore {
         && d.siempreSale is bool;
     }
 
+    function jugadaQuinielaValida(d) {
+      return d.keys().hasOnly(['juego', 'fechaSorteo', 'turno', 'jurisdicciones', 'numero', 'ubicacion', 'importe', 'actualizada'])
+        && d.fechaSorteo is string && d.fechaSorteo.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && d.turno in ['PREVIA', 'PRIMERA', 'MATUTINA', 'VESPERTINA', 'NOCTURNA']
+        && d.jurisdicciones is list && d.jurisdicciones.size() >= 1
+        && d.jurisdicciones.hasOnly(['NACIONAL', 'BUENOS_AIRES', 'CORDOBA', 'SANTA_FE'])
+        && d.numero is string && d.numero.matches('^[0-9]{1,4}$')
+        && d.ubicacion in [1, 5, 10, 20]
+        && (!('importe' in d) || (d.importe is number && d.importe > 0));
+    }
+
+    function jugadaValida(d) {
+      // Se mira primero el juego: así nunca se evalúan campos que ese tipo de jugada no tiene
+      return (d.juego == 'QUINI6' && jugadaQuini6Valida(d))
+        || (d.juego == 'QUINIELA' && jugadaQuinielaValida(d));
+    }
+
     match /usuarios/{uid}/jugadas/{jugadaId} {
       allow read, delete: if esDuenio(uid);
-      allow create, update: if esDuenio(uid) && jugadaQuini6Valida(request.resource.data);
+      allow create, update: if esDuenio(uid) && jugadaValida(request.resource.data);
     }
 
     match /sorteos/{sorteoId} {

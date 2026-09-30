@@ -14,11 +14,12 @@ y controlar automáticamente los aciertos, con notificación cuando se publican 
 |---|---|
 | Plataforma | Android (Play Store) |
 | Lenguaje app | Kotlin + Jetpack Compose (Android Studio) |
-| Backend | Firebase: Authentication, Cloud Firestore, Cloud Functions (TypeScript), Cloud Messaging |
+| Backend | Firebase: Authentication, Cloud Firestore, Cloud Messaging. Sin Cloud Functions: el control de aciertos se hace en la app y los avisos los envía la herramienta `admin` |
 | Login | Google Sign-In + modo invitado (anónimo, vinculable luego a Google). Facebook: no por ahora |
-| Carga de resultados | **Manual** desde una sección de administrador dentro de la app (solo visible para admins) |
+| Carga de resultados | **Manual con la herramienta `admin`** (línea de comandos, Admin SDK): se le pide a Claude "cargá los resultados de hoy", los verifica en dos fuentes y los sube. Más adelante: panel dentro de la app y automatización |
 | Juegos | Quini 6 y Quiniela |
-| Quinielas | Nacional (Ciudad), Buenos Aires (Provincia), Córdoba, Santa Fe, Santiago del Estero |
+| Quinielas | Nacional, Buenos Aires (Provincia), Córdoba, Santa Fe (Santiago del Estero quedó afuera; se agrega fácil) |
+| Arquitectura | Módulos: `app` (Android), `dominio` (reglas y control de aciertos, con tests), `admin` (herramienta de carga) |
 | Package name | `com.jluna.revisarjugadas` (definitivo: no se puede cambiar una vez publicado) |
 
 ---
@@ -38,17 +39,18 @@ y controlar automáticamente los aciertos, con notificación cuando se publican 
 - [x] Estructura de la app: navegación, tema, pantallas vacías
 - [x] Login con Google + modo invitado (con vinculación invitado → Google)
 - [x] Cargar / editar / borrar jugadas de Quini 6
-- [ ] Ver resultados del último sorteo y anteriores
-- [ ] Sección admin: cargar resultados de Quini 6 (todas las modalidades) y publicar
-- [ ] Cloud Function: al publicar, controlar las jugadas del sorteo y guardar aciertos
-- [ ] Notificaciones: aviso general + aviso personal con el resultado de tus jugadas
+- [x] Ver resultados (pestaña Resultados: Quini 6 y Quinielas por día)
+- [x] Herramienta `admin` para cargar resultados de Quini 6 y Quiniela (falta la clave de la cuenta de servicio)
+- [ ] Panel de admin dentro de la app
+- [x] Control de aciertos en la app (módulo `dominio`), visible en cada jugada
+- [x] Notificaciones: la herramienta `admin` envía el aviso (FCM, por temas) al cargar un resultado
 - [x] Reglas de seguridad de Firestore (cada usuario solo ve sus jugadas; solo admin escribe sorteos) — en `firestore.rules`, publicadas a mano desde la consola
 
 ### Etapa 2 — Quiniela
-- [ ] Cargar apuestas de Quiniela (1 a 4 cifras, posición, jurisdicción, turno)
-- [ ] Sección admin: pegar texto con los 20 números → detectar, validar, publicar
-- [ ] Control de aciertos + cálculo estimado de premio según tabla de pagos
-- [ ] Preferencias de notificaciones (por juego / jurisdicción / turno)
+- [x] Cargar apuestas de Quiniela (1 a 4 cifras, ubicación, una o varias jurisdicciones, turno, importe)
+- [x] Carga de extractos (20 números) con la herramienta `admin`
+- [x] Control de aciertos + premio estimado según tabla de pagos
+- [x] Preferencias de notificaciones en Ajustes (Quini 6 activado por defecto; cada quiniela opcional)
 - [ ] Redoblona (evaluar si entra en esta etapa o más adelante)
 
 ### Etapa 3 — Publicación
@@ -62,6 +64,7 @@ y controlar automáticamente los aciertos, con notificación cuando se publican 
 ### Etapa 4 — Extras (futuro)
 - [ ] Scrapers automáticos de resultados (con confirmación del admin)
 - [ ] Escanear la boleta con la cámara (ML Kit)
+- [ ] Botón "Repetir en el próximo sorteo" en cada jugada
 - [ ] Jugadas fijas que se repiten cada sorteo
 - [ ] Estadísticas (números más salidos, etc.)
 - [ ] Más jurisdicciones (Entre Ríos, Mendoza, ...)

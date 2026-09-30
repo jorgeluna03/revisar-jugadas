@@ -1,9 +1,19 @@
 package com.jluna.revisarjugadas.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Switch
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.ui.Alignment
+import com.jluna.revisarjugadas.data.notificaciones.Notificaciones
+import com.jluna.revisarjugadas.dominio.Avisos
+import com.jluna.revisarjugadas.dominio.Jurisdiccion
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -27,7 +37,7 @@ fun AjustesScreen(usuario: Usuario, sesion: SesionViewModel) {
     val context = LocalContext.current
     var confirmarSalida by remember { mutableStateOf(false) }
 
-    Column(Modifier.fillMaxSize().padding(16.dp)) {
+    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp)) {
         Text("Ajustes", style = MaterialTheme.typography.headlineSmall)
 
         Card(Modifier.fillMaxWidth().padding(top = 16.dp)) {
@@ -62,6 +72,8 @@ fun AjustesScreen(usuario: Usuario, sesion: SesionViewModel) {
             }
         }
 
+        TarjetaNotificaciones()
+
         Text(
             "App no oficial. Verificá siempre tu boleta en una agencia.",
             style = MaterialTheme.typography.labelSmall,
@@ -92,5 +104,44 @@ fun AjustesScreen(usuario: Usuario, sesion: SesionViewModel) {
                 TextButton(onClick = { confirmarSalida = false }) { Text("Cancelar") }
             },
         )
+    }
+}
+
+@Composable
+private fun TarjetaNotificaciones() {
+    val context = LocalContext.current
+    // Copia en memoria de las preferencias, para que los interruptores se actualicen al tocarlos
+    val activos = remember {
+        mutableStateMapOf<String, Boolean>().apply {
+            Notificaciones.temas.forEach { put(it, Notificaciones.activado(context, it)) }
+        }
+    }
+    val opciones = listOf(Avisos.TEMA_QUINI6 to "Quini 6") +
+        Jurisdiccion.entries.map { Avisos.temaQuiniela(it) to "Quiniela ${it.nombre}" }
+
+    Card(Modifier.fillMaxWidth().padding(top = 16.dp)) {
+        Column(Modifier.padding(16.dp)) {
+            Text("Notificaciones", style = MaterialTheme.typography.titleMedium)
+            Text(
+                "Te avisamos cuando se cargan los números de un sorteo. " +
+                    "La Quiniela tiene 5 sorteos por día: activá solo las que juegues.",
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
+            )
+            opciones.forEach { (tema, nombre) ->
+                val activo = activos[tema] == true
+                val cambiar = { nuevo: Boolean ->
+                    activos[tema] = nuevo
+                    Notificaciones.cambiar(context, tema, nuevo)
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth().clickable { cambiar(!activo) }.padding(vertical = 4.dp),
+                ) {
+                    Text(nombre, modifier = Modifier.weight(1f))
+                    Switch(checked = activo, onCheckedChange = cambiar)
+                }
+            }
+        }
     }
 }

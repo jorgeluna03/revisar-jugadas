@@ -4,8 +4,7 @@
 /local.properties
 /.idea/
 .DS_Store
-/build/
-/app/build/
+build/
 /captures/
 .externalNativeBuild/
 .cxx/
@@ -14,3 +13,7 @@
 
 # Configuración de Firebase (no subir al repo)
 /app/google-services.json
+
+# Clave de la cuenta de servicio de Firebase: acceso total a la base, NUNCA subir
+/admin/credenciales.json
+*firebase-adminsdk*.json

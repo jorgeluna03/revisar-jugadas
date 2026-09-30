@@ -14,4 +14,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "RevisarJugadas"
-include(":app")
+include(":app", ":dominio", ":admin")

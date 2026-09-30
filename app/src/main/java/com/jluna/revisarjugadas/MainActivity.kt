@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.jluna.revisarjugadas.data.notificaciones.Notificaciones
 import com.jluna.revisarjugadas.ui.login.EstadoSesion
 import com.jluna.revisarjugadas.ui.login.LoginScreen
 import com.jluna.revisarjugadas.ui.login.SesionViewModel
@@ -23,6 +24,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        Notificaciones.crearCanal(this)
         setContent {
             RevisarJugadasTheme {
                 Surface(Modifier.fillMaxSize()) {

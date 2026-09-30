@@ -1,4 +1,4 @@
-package com.jluna.revisarjugadas.data.quini6
+package com.jluna.revisarjugadas.dominio
 
 import java.time.DayOfWeek
 import java.time.LocalDate

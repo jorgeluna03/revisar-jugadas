@@ -40,14 +40,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.jluna.revisarjugadas.data.quini6.CalendarioQuini6
-import com.jluna.revisarjugadas.data.quini6.JugadaQuini6
+import com.jluna.revisarjugadas.dominio.CalendarioQuini6
+import com.jluna.revisarjugadas.dominio.Quini6
+import com.jluna.revisarjugadas.data.jugadas.JugadaQuini6
 import java.time.LocalDate
 
-/** Pantalla para cargar una jugada nueva ([inicial] null) o editar una existente. */
+/** Pantalla para cargar una jugada de Quini 6 nueva ([inicial] null) o editar una existente. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditarJugadaScreen(
+fun EditarQuini6Screen(
     inicial: JugadaQuini6?,
     onGuardar: (JugadaQuini6) -> Unit,
     onBorrar: (String) -> Unit,
@@ -63,12 +64,12 @@ fun EditarJugadaScreen(
     var confirmarBorrado by remember { mutableStateOf(false) }
 
     val fecha = LocalDate.parse(fechaTexto)
-    val completa = seleccionados.size == JugadaQuini6.CANTIDAD_NUMEROS
+    val completa = seleccionados.size == Quini6.CANTIDAD_NUMEROS
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (inicial == null) "Nueva jugada" else "Editar jugada") },
+                title = { Text(if (inicial == null) "Nuevo Quini 6" else "Editar Quini 6") },
                 navigationIcon = {
                     IconButton(onClick = onVolver) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
@@ -100,7 +101,7 @@ fun EditarJugadaScreen(
             ) {
                 Text("Tus números", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
                 Text(
-                    "${seleccionados.size} de ${JugadaQuini6.CANTIDAD_NUMEROS}",
+                    "${seleccionados.size} de ${Quini6.CANTIDAD_NUMEROS}",
                     color = if (completa) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
@@ -139,7 +140,7 @@ fun EditarJugadaScreen(
                 enabled = completa,
                 modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
             ) {
-                Text(if (completa) "Guardar jugada" else "Elegí ${JugadaQuini6.CANTIDAD_NUMEROS - seleccionados.size} número(s) más")
+                Text(if (completa) "Guardar jugada" else "Elegí ${Quini6.CANTIDAD_NUMEROS - seleccionados.size} número(s) más")
             }
         }
     }
@@ -193,7 +194,7 @@ private fun GrillaDeNumeros(
 ) {
     val porFila = 8
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        JugadaQuini6.RANGO_NUMEROS.chunked(porFila).forEach { fila ->
+        Quini6.RANGO_NUMEROS.chunked(porFila).forEach { fila ->
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 fila.forEach { numero ->
                     Bolilla(
